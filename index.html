@@ -7,7 +7,7 @@
   <meta name="description" content="מעצבת את הכלי – מרחיבה את האופק. עיצוב מרחבי למידה, תוכנית מלא את הכלי, כלים ויזואליים למערכת החינוך.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -137,16 +137,23 @@
       overflow: hidden;
     }
 
-    /* background organic shape */
-    .hero-blob {
+    /* Modern botanical SVG background */
+    .hero-bg-art {
       position: absolute;
-      top: -10%; right: -5%;
-      width: 55%;
-      height: 110%;
-      background: var(--clay-light);
-      border-radius: 60% 40% 50% 70% / 50% 60% 40% 60%;
+      inset: 0;
       z-index: 0;
-      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    /* Warm gradient wash behind right side */
+    .hero-bg-wash {
+      position: absolute;
+      top: 0; right: 0;
+      width: 52%;
+      height: 100%;
+      background: linear-gradient(135deg, #fdf4ec 0%, #f5e0cc 60%, #eedcc8 100%);
+      z-index: 0;
+      clip-path: polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
 
     .hero-inner {
@@ -842,14 +849,239 @@
       .contact-pots { flex-wrap: wrap; }
     }
 
-    /* ── ANIMATIONS ── */
+    /* ══════════════════════════════════════════
+       LIFE & MOTION SYSTEM
+    ══════════════════════════════════════════ */
+
+    /* ── Base reveal ── */
     .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .reveal-left { opacity: 0; transform: translateX(40px); transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1); }
+    .reveal-left.visible { opacity: 1; transform: none; }
+
+    /* ── Hero plant grows on load ── */
+    @keyframes growUp {
+      from { transform: scaleY(0) scaleX(0.7); opacity: 0; transform-origin: bottom center; }
+      to   { transform: scaleY(1) scaleX(1);   opacity: 1; transform-origin: bottom center; }
+    }
+    @keyframes floatPot {
+      0%,100% { transform: translateY(0px) rotate(0deg); }
+      33%      { transform: translateY(-10px) rotate(1deg); }
+      66%      { transform: translateY(-5px) rotate(-0.5deg); }
+    }
+    @keyframes leafSway {
+      0%,100% { transform: rotate(0deg); transform-origin: bottom center; }
+      50%      { transform: rotate(3deg); transform-origin: bottom center; }
+    }
+    .main-pot {
+      animation: growUp 1.2s cubic-bezier(.16,1,.3,1) 0.3s both,
+                 floatPot 6s ease-in-out 1.6s infinite;
+    }
+    .float-pot { animation: floatPot 7s ease-in-out infinite; }
+    .float-pot:nth-child(1) { animation-delay: 0.5s; }
+    .float-pot:nth-child(2) { animation-delay: 1.2s; }
+
+    /* ── Hero title stagger ── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: slideUp 0.7s cubic-bezier(.16,1,.3,1) 0.15s both; }
+    .hero-title   { animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.3s both; }
+    .hero-sub     { animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.45s both; }
+    .hero-ctas    { animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.6s both; }
+
+    /* ── Hero title — bigger & bolder ── */
+    .hero-title {
+      font-size: clamp(46px, 6.5vw, 84px) !important;
+      line-height: 1.05 !important;
     }
 
-    .reveal.visible { opacity: 1; transform: none; }
+    /* Gradient word highlight */
+    .hero-title em {
+      background: linear-gradient(135deg, #c4704a 0%, #d4a24a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── STATS STRIP ── */
+    #stats {
+      background: var(--ink);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-box {
+      padding: 52px 32px;
+      border-left: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--clay), var(--amber));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .stat-box:hover { background: rgba(255,255,255,0.03); }
+    .stat-box:hover::before { transform: scaleX(1); }
+
+    .stat-num {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: clamp(44px, 5vw, 64px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-num span { color: var(--clay); }
+
+    .stat-desc {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 768px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-box { padding: 36px 20px; }
+    }
+
+    /* ── MARQUEE STRIP ── */
+    #marquee {
+      background: var(--clay);
+      padding: 14px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-track {
+      display: inline-flex;
+      gap: 0;
+      animation: marqueeScroll 28s linear infinite;
+    }
+
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .marquee-item {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .marquee-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      flex-shrink: 0;
+    }
+
+    /* ── Diagonal section separator ── */
+    .section-diagonal-after {
+      position: relative;
+    }
+    .section-diagonal-after::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 60px;
+      background: var(--cream-dark);
+      clip-path: polygon(0 60px, 100% 0, 100% 60px);
+      z-index: 2;
+    }
+
+    /* ── Card hover glow ── */
+    .service-card, .product-card, .tl-item {
+      transition: transform 0.35s cubic-bezier(.16,1,.3,1),
+                  box-shadow 0.35s ease,
+                  border-color 0.25s ease !important;
+    }
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02) !important;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.2) !important;
+    }
+    .product-card:hover {
+      transform: translateY(-8px) !important;
+      box-shadow: 0 24px 60px rgba(196,112,74,0.2) !important;
+    }
+    .tl-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(196,112,74,0.12);
+    }
+
+    /* ── About section — bold pull quote ── */
+    .about-bigquote {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+    }
+
+    .about-bigquote em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Botanical bg animation ── */
+    @keyframes botanicalSway {
+      0%,100% { transform: rotate(0deg) translateY(0); }
+      50%      { transform: rotate(1.5deg) translateY(-6px); }
+    }
+    .hero-bg-art { animation: botanicalSway 12s ease-in-out infinite; transform-origin: 80% 100%; }
+
+    /* ── Nav entrance ── */
+    nav { animation: slideUp 0.6s cubic-bezier(.16,1,.3,1) both; }
+
+    /* ── Button pulse ── */
+    @keyframes btnPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(196,112,74,0.4); }
+      50%      { box-shadow: 0 0 0 10px rgba(196,112,74,0); }
+    }
+    .btn-primary { animation: btnPulse 3s ease-in-out 2s infinite; }
+    .btn-primary:hover { animation: none !important; }
+
+    /* ── Section title size boost ── */
+    .section-title { font-size: clamp(34px, 4.5vw, 56px) !important; }
+
   </style>
 </head>
 <body>
@@ -881,7 +1113,74 @@
 
 <!-- ══════════ HERO ══════════ -->
 <section id="hero">
-  <div class="hero-blob"></div>
+  <!-- Warm wash behind visual side -->
+  <div class="hero-bg-wash"></div>
+
+  <!-- Botanical line art SVG -->
+  <svg class="hero-bg-art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+    <!-- Large botanical stems — right side -->
+    <g opacity="0.18" stroke="#a3572f" stroke-linecap="round">
+      <!-- Main tall stem -->
+      <path d="M1080 900 Q1060 700 1100 500 Q1130 320 1060 120" stroke-width="1.8"/>
+      <!-- Left branch -->
+      <path d="M1078 580 Q1020 520 960 490 Q910 470 870 440" stroke-width="1.4"/>
+      <path d="M960 490 Q950 460 940 430" stroke-width="1"/>
+      <!-- Right branch -->
+      <path d="M1090 440 Q1140 400 1180 360 Q1210 330 1220 290" stroke-width="1.4"/>
+      <path d="M1180 360 Q1200 340 1195 310" stroke-width="1"/>
+      <!-- Top branch -->
+      <path d="M1065 240 Q1030 200 1000 170 Q970 145 950 110" stroke-width="1.4"/>
+    </g>
+
+    <!-- Leaf shapes — warm clay -->
+    <g opacity="0.14" fill="#c4704a">
+      <!-- Big leaf left branch -->
+      <path d="M960 490 Q930 450 890 480 Q920 510 960 490 Z"/>
+      <path d="M870 440 Q840 405 810 430 Q840 460 870 440 Z"/>
+      <!-- Right branch leaves -->
+      <path d="M1180 360 Q1210 320 1240 340 Q1215 370 1180 360 Z"/>
+      <path d="M1220 290 Q1250 250 1280 270 Q1255 300 1220 290 Z"/>
+      <!-- Top leaves -->
+      <path d="M1000 170 Q970 135 940 155 Q965 185 1000 170 Z"/>
+      <path d="M950 110 Q920 80 895 100 Q918 128 950 110 Z"/>
+      <!-- Main stem leaves at intervals -->
+      <path d="M1095 350 Q1130 320 1150 345 Q1125 368 1095 350 Z"/>
+      <path d="M1070 620 Q1040 590 1060 565 Q1085 588 1070 620 Z"/>
+    </g>
+
+    <!-- Thin secondary botanical stems — left area, decorative -->
+    <g opacity="0.09" stroke="#3d6b52" stroke-linecap="round">
+      <path d="M180 900 Q170 750 195 600 Q215 480 185 350 Q165 250 200 120" stroke-width="1.4"/>
+      <path d="M183 620 Q140 585 110 560" stroke-width="1"/>
+      <path d="M190 420 Q225 390 255 365" stroke-width="1"/>
+      <path d="M190 250 Q165 220 145 190" stroke-width="1"/>
+    </g>
+    <g opacity="0.07" fill="#3d6b52">
+      <path d="M110 560 Q85 535 80 555 Q100 568 110 560 Z"/>
+      <path d="M255 365 Q280 342 278 362 Q262 372 255 365 Z"/>
+      <path d="M145 190 Q125 168 122 184 Q136 196 145 190 Z"/>
+    </g>
+
+    <!-- Subtle dot field — bottom right -->
+    <g opacity="0.1" fill="#c4704a">
+      <circle cx="1300" cy="800" r="3"/>
+      <circle cx="1330" cy="760" r="2"/>
+      <circle cx="1360" cy="820" r="2.5"/>
+      <circle cx="1290" cy="840" r="2"/>
+      <circle cx="1350" cy="780" r="1.5"/>
+      <circle cx="1380" cy="750" r="3"/>
+      <circle cx="1400" cy="830" r="2"/>
+    </g>
+
+    <!-- Golden accent dots — scattered -->
+    <g opacity="0.2" fill="#d4a24a">
+      <circle cx="1050" cy="195" r="5"/>
+      <circle cx="965" cy="108" r="3.5"/>
+      <circle cx="880" cy="438" r="4"/>
+      <circle cx="1245" cy="285" r="4"/>
+    </g>
+  </svg>
+
   <div class="hero-inner">
 
     <!-- Text -->
@@ -969,6 +1268,48 @@
   </div>
 </section>
 
+<!-- ══════════ MARQUEE STRIP ══════════ -->
+<div id="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">מרחבי למידה<span class="marquee-dot"></span></span>
+    <span class="marquee-item">תוכנית "מלא את הכלי"<span class="marquee-dot"></span></span>
+    <span class="marquee-item">קשב ורפלקציה<span class="marquee-dot"></span></span>
+    <span class="marquee-item">עיצוב פדגוגי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">צמיחה במיומנויות המחר<span class="marquee-dot"></span></span>
+    <span class="marquee-item">כיתות עתיד<span class="marquee-dot"></span></span>
+    <span class="marquee-item">ביטחון עצמי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">מרחבי למידה<span class="marquee-dot"></span></span>
+    <span class="marquee-item">תוכנית "מלא את הכלי"<span class="marquee-dot"></span></span>
+    <span class="marquee-item">קשב ורפלקציה<span class="marquee-dot"></span></span>
+    <span class="marquee-item">עיצוב פדגוגי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">צמיחה במיומנויות המחר<span class="marquee-dot"></span></span>
+    <span class="marquee-item">כיתות עתיד<span class="marquee-dot"></span></span>
+    <span class="marquee-item">ביטחון עצמי<span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- ══════════ STATS ══════════ -->
+<div id="stats">
+  <div class="stats-inner">
+    <div class="stat-box reveal">
+      <div class="stat-num"><span class="count" data-target="12">0</span><span>+</span></div>
+      <div class="stat-desc">שנות ניסיון בחינוך ועיצוב</div>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-num"><span class="count" data-target="50">0</span><span>+</span></div>
+      <div class="stat-desc">מוסדות חינוך עוצבו</div>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-num"><span class="count" data-target="800">0</span><span>+</span></div>
+      <div class="stat-desc">מורים הוכשרו בשיטה</div>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-num"><span class="count" data-target="3">0</span></div>
+      <div class="stat-desc">שכבות גיל, שיטה אחת</div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════ ABOUT — CLAY BG ══════════ -->
 <section id="about">
   <div class="container">
@@ -976,7 +1317,7 @@
 
       <div class="reveal">
         <div class="sec-eyebrow white">ה"אני מאמין" המקצועי</div>
-        <h2 class="section-title" style="color:#fff">המרחב כשותף<br>פעיל בלמידה.</h2>
+        <div class="about-bigquote">המרחב<br><em>הוא</em> המורה.</div>
 
         <p class="about-text" style="margin-top:20px">
           מרחב חינוכי הוא הרבה יותר מקירות ורהיטים; הוא <strong>התבנית שבה מתעצב הקשב</strong>. גישת העיצוב שלי משלבת בין סביבה פיזית הרמונית לבין פדגוגיה עמוקה השואבת השראה מהמקורות.
@@ -1379,6 +1720,25 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
   el.style.transitionDelay = (i % 3) * 0.08 + 's';
   io.observe(el);
 });
+
+// Counter animation
+const counterIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = +el.dataset.target;
+    const duration = 1400;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { el.textContent = target; clearInterval(timer); }
+      else el.textContent = Math.floor(current);
+    }, 16);
+    counterIO.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.count').forEach(el => counterIO.observe(el));
 
 // Form
 document.getElementById('contactForm')?.addEventListener('submit', e => {
