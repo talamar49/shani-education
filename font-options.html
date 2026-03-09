@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Rubik:wght@300;400;600&family=Noto+Serif+Hebrew:wght@700;900&family=Heebo:wght@300;400;700;900&family=Suez+One&family=Assistant:wght@300;400;600;700&family=Secular+One&family=Almoni+DL+AAA:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#ede7de;font-family:sans-serif;padding:28px 32px;display:flex;flex-direction:column;gap:24px;}
+
+.card{
+  background:#fdf8f2;border-radius:10px;padding:44px 52px;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:3px;
+}
+.tag{
+  position:absolute;top:16px;left:16px;
+  background:#1e1408;color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border-radius:2px;
+  font-family:sans-serif;
+}
+.divider{width:1px;background:#e8d9c8;height:100%;position:absolute;right:50%;}
+
+/* Left: heading sample */
+.sample-title{font-size:40px;line-height:1.1;letter-spacing:-.02em;color:#1e1408;margin-bottom:12px;}
+.sample-title em{font-style:normal;color:#c4704a;}
+.sample-sub{font-size:15px;line-height:1.8;color:#6b5540;margin-bottom:18px;}
+.sample-cta{display:inline-block;background:#c4704a;color:#fff;padding:11px 24px;border-radius:4px;font-size:14px;font-weight:600;}
+
+/* Right: body sample */
+.sample-body-title{font-size:16px;font-weight:700;color:#1e1408;margin-bottom:8px;border-bottom:1px solid #e8d9c8;padding-bottom:8px;}
+.sample-body-text{font-size:14px;line-height:1.85;color:#4a3520;}
+.font-name{font-size:11px;color:#b0a090;margin-top:10px;letter-spacing:.06em;}
+
+/* ── OPTION A: Noto Serif + Heebo ── */
+.card-a::before{background:linear-gradient(#c4704a,#d4a24a);}
+.card-a .sample-title,.card-a .sample-body-title{font-family:'Noto Serif Hebrew',serif;}
+.card-a .sample-sub,.card-a .sample-cta,.card-a .sample-body-text,.card-a .font-name{font-family:'Heebo',sans-serif;}
+
+/* ── OPTION B: Suez One + Assistant ── */
+.card-b::before{background:linear-gradient(#3d6b52,#7a9e7e);}
+.card-b .sample-title,.card-b .sample-body-title{font-family:'Suez One',serif;}
+.card-b .sample-sub,.card-b .sample-cta,.card-b .sample-body-text,.card-b .font-name{font-family:'Assistant',sans-serif;}
+
+/* ── OPTION C: Secular One + Heebo ── */
+.card-c::before{background:linear-gradient(#d4a24a,#c4704a);}
+.card-c .sample-title,.card-c .sample-body-title{font-family:'Secular One',sans-serif;}
+.card-c .sample-sub,.card-c .sample-cta,.card-c .sample-body-text,.card-c .font-name{font-family:'Heebo',sans-serif;}
+
+/* ── OPTION D (current): Frank Ruhl + Rubik ── */
+.card-d::before{background:#999;}
+.card-d .sample-title,.card-d .sample-body-title{font-family:'Frank Ruhl Libre',serif;}
+.card-d .sample-sub,.card-d .sample-cta,.card-d .sample-body-text,.card-d .font-name{font-family:'Rubik',sans-serif;}
+</style>
+</head>
+<body>
+
+<!-- A -->
+<div class="card card-a">
+  <div class="tag">A — קלאסי אלגנטי</div>
+  <div>
+    <div class="sample-title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</div>
+    <div class="sample-sub">מרחבים פיזיים שהופכים למרחבי תודעה.</div>
+    <a class="sample-cta">שיטת "מלא את הכלי"</a>
+  </div>
+  <div>
+    <div class="sample-body-title">על הגישה שלי</div>
+    <div class="sample-body-text">כל ילד הוא כלי ייחודי — עם צורה משלו וקיבולת משלו. תפקידנו לזהות את הכלי, להרחיב אותו בעדינות, ולמלא אותו בתוכן שיזין את נשמתו.</div>
+    <div class="font-name">כותרות: Noto Serif Hebrew · גוף: Heebo</div>
+  </div>
+</div>
+
+<!-- B -->
+<div class="card card-b">
+  <div class="tag">B — חזק ומודרני</div>
+  <div>
+    <div class="sample-title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</div>
+    <div class="sample-sub">מרחבים פיזיים שהופכים למרחבי תודעה.</div>
+    <a class="sample-cta">שיטת "מלא את הכלי"</a>
+  </div>
+  <div>
+    <div class="sample-body-title">על הגישה שלי</div>
+    <div class="sample-body-text">כל ילד הוא כלי ייחודי — עם צורה משלו וקיבולת משלו. תפקידנו לזהות את הכלי, להרחיב אותו בעדינות, ולמלא אותו בתוכן שיזין את נשמתו.</div>
+    <div class="font-name">כותרות: Suez One · גוף: Assistant</div>
+  </div>
+</div>
+
+<!-- C -->
+<div class="card card-c">
+  <div class="tag">C — גיאומטרי עגול</div>
+  <div>
+    <div class="sample-title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</div>
+    <div class="sample-sub">מרחבים פיזיים שהופכים למרחבי תודעה.</div>
+    <a class="sample-cta">שיטת "מלא את הכלי"</a>
+  </div>
+  <div>
+    <div class="sample-body-title">על הגישה שלי</div>
+    <div class="sample-body-text">כל ילד הוא כלי ייחודי — עם צורה משלו וקיבולת משלו. תפקידנו לזהות את הכלי, להרחיב אותו בעדינות, ולמלא אותו בתוכן שיזין את נשמתו.</div>
+    <div class="font-name">כותרות: Secular One · גוף: Heebo</div>
+  </div>
+</div>
+
+<!-- D (current) -->
+<div class="card card-d" style="opacity:.7;">
+  <div class="tag" style="background:#888;">הנוכחי (להשוואה)</div>
+  <div>
+    <div class="sample-title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</div>
+    <div class="sample-sub">מרחבים פיזיים שהופכים למרחבי תודעה.</div>
+    <a class="sample-cta">שיטת "מלא את הכלי"</a>
+  </div>
+  <div>
+    <div class="sample-body-title">על הגישה שלי</div>
+    <div class="sample-body-text">כל ילד הוא כלי ייחודי — עם צורה משלו וקיבולת משלו. תפקידנו לזהות את הכלי, להרחיב אותו בעדינות, ולמלא אותו בתוכן שיזין את נשמתו.</div>
+    <div class="font-name">כותרות: Frank Ruhl Libre · גוף: Rubik</div>
+  </div>
+</div>
+
+</body>
+</html>

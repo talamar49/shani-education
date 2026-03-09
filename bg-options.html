@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rubik',sans-serif;background:#f0ebe3}
+
+.option-wrap{padding:20px 32px;display:flex;flex-direction:column;gap:48px;}
+.option-label{
+  font-family:'Rubik',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:#6b5540;
+  margin-bottom:12px;display:flex;align-items:center;gap:12px;
+}
+.option-label span{
+  background:#1e1408;color:#fff;padding:4px 12px;border-radius:2px;font-size:11px;
+}
+
+/* ── HERO SHARED ── */
+.hero{
+  width:100%;height:440px;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;border-radius:10px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.15);
+}
+.hero-content{
+  position:relative;z-index:2;padding:0 60px;max-width:520px;
+}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'';width:24px;height:2px;border-radius:2px;display:block;}
+.title{font-family:'Frank Ruhl Libre',serif;font-size:54px;font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px;}
+.sub{font-size:15px;font-weight:400;line-height:1.8;max-width:380px;margin-bottom:28px;}
+.cta{display:inline-block;padding:13px 28px;border-radius:4px;font-size:14px;font-weight:600;text-decoration:none;}
+
+/* ════════════════════════════════
+   OPTION A — Gradient Orbs (עננים)
+════════════════════════════════ */
+.hero-a{background:#fdf8f2;}
+.hero-a .orb{position:absolute;border-radius:50%;filter:blur(70px);}
+.hero-a .orb-1{width:420px;height:420px;background:#f0c4a0;opacity:.55;top:-60px;right:-80px;}
+.hero-a .orb-2{width:300px;height:300px;background:#c9ddd0;opacity:.4;bottom:-60px;right:120px;}
+.hero-a .orb-3{width:240px;height:240px;background:#f0d98a;opacity:.3;top:40px;right:200px;}
+.hero-a .eyebrow{color:#c4704a;}.hero-a .eyebrow::before{background:#c4704a;}
+.hero-a .title{color:#1e1408;}.hero-a .title em{color:#c4704a;font-style:normal;}
+.hero-a .sub{color:#6b5540;}
+.hero-a .cta{background:#c4704a;color:#fff;}
+
+/* ════════════════════════════════
+   OPTION B — Diagonal Block
+════════════════════════════════ */
+.hero-b{background:#fdf8f2;}
+.hero-b .block{
+  position:absolute;top:0;right:0;width:48%;height:100%;
+  background:linear-gradient(160deg,#c4704a 0%,#a3572f 100%);
+  clip-path:polygon(18% 0,100% 0,100% 100%,0% 100%);
+}
+.hero-b .block-detail{
+  position:absolute;top:0;right:0;width:48%;height:100%;
+  clip-path:polygon(18% 0,100% 0,100% 100%,0% 100%);
+  display:flex;align-items:center;justify-content:flex-start;padding-right:40px;
+}
+.hero-b .pot-outline{opacity:.15;}
+.hero-b .eyebrow{color:#c4704a;}.hero-b .eyebrow::before{background:#c4704a;}
+.hero-b .title{color:#1e1408;}.hero-b .title em{color:#c4704a;font-style:normal;}
+.hero-b .sub{color:#6b5540;}
+.hero-b .cta{background:#1e1408;color:#fff;}
+
+/* ════════════════════════════════
+   OPTION C — Large Ghost Text
+════════════════════════════════ */
+.hero-c{background:#fdf8f2;}
+.hero-c .ghost-word{
+  position:absolute;
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:340px;font-weight:900;
+  color:transparent;
+  -webkit-text-stroke:1.5px #c4704a;
+  opacity:.07;
+  right:-30px;top:50%;transform:translateY(-50%);
+  letter-spacing:-.05em;white-space:nowrap;
+  user-select:none;pointer-events:none;
+}
+.hero-c .stripe{
+  position:absolute;bottom:0;right:0;
+  width:100%;height:4px;
+  background:linear-gradient(90deg,transparent,#c4704a 30%,#d4a24a 60%,transparent);
+}
+.hero-c .eyebrow{color:#c4704a;}.hero-c .eyebrow::before{background:#c4704a;}
+.hero-c .title{color:#1e1408;}.hero-c .title em{color:#c4704a;font-style:normal;}
+.hero-c .sub{color:#6b5540;}
+.hero-c .cta{background:#c4704a;color:#fff;}
+
+/* ════════════════════════════════
+   OPTION D — Forest / Green Split
+════════════════════════════════ */
+.hero-d{background:#3d6b52;}
+.hero-d .cream-panel{
+  position:absolute;top:0;right:0;width:54%;height:100%;
+  background:#fdf8f2;
+  clip-path:polygon(14% 0,100% 0,100% 100%,0 100%);
+}
+.hero-d .texture-dots{
+  position:absolute;top:0;left:0;width:46%;height:100%;
+  background-image:radial-gradient(circle,rgba(255,255,255,.18) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.hero-d .eyebrow{color:#d4a24a;}.hero-d .eyebrow::before{background:#d4a24a;}
+.hero-d .title{color:#fff;}.hero-d .title em{color:#d4a24a;font-style:normal;}
+.hero-d .sub{color:rgba(255,255,255,.7);}
+.hero-d .cta{background:#d4a24a;color:#1e1408;}
+</style>
+</head>
+<body>
+<div class="option-wrap" style="padding-top:32px;">
+
+<!-- OPTION A -->
+<div>
+  <div class="option-label"><span>A</span> עננים רכים — Soft Gradient Orbs</div>
+  <div class="hero hero-a">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="hero-content">
+      <div class="eyebrow">אדריכלות של קשב</div>
+      <h1 class="title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</h1>
+      <p class="sub">מרחבים שמעוררים קשב, רפלקציה וצמיחה.</p>
+      <a href="#" class="cta">שיטת "מלא את הכלי"</a>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION B -->
+<div>
+  <div class="option-label"><span>B</span> בלוק אלכסוני — Bold Diagonal</div>
+  <div class="hero hero-b">
+    <div class="block"></div>
+    <div class="block-detail">
+      <svg class="pot-outline" width="220" height="260" viewBox="0 0 220 260" fill="none">
+        <ellipse cx="110" cy="80" rx="52" ry="18" stroke="#fff" stroke-width="2"/>
+        <path d="M110 80 Q110 45 95 25 M110 80 Q105 40 120 20 M110 80 Q118 44 128 26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <path d="M62 98 L80 200 Q80 215 110 215 Q140 215 140 200 L158 98 Z" stroke="#fff" stroke-width="2" fill="none"/>
+        <ellipse cx="110" cy="98" rx="50" ry="14" stroke="#fff" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <div class="eyebrow">אדריכלות של קשב</div>
+      <h1 class="title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</h1>
+      <p class="sub">מרחבים שמעוררים קשב, רפלקציה וצמיחה.</p>
+      <a href="#" class="cta">שיטת "מלא את הכלי"</a>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION C -->
+<div>
+  <div class="option-label"><span>C</span> טקסט רפאים — Ghost Typography</div>
+  <div class="hero hero-c">
+    <div class="ghost-word">כלי</div>
+    <div class="stripe"></div>
+    <div class="hero-content">
+      <div class="eyebrow">אדריכלות של קשב</div>
+      <h1 class="title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</h1>
+      <p class="sub">מרחבים שמעוררים קשב, רפלקציה וצמיחה.</p>
+      <a href="#" class="cta">שיטת "מלא את הכלי"</a>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION D -->
+<div>
+  <div class="option-label"><span>D</span> ירוק יער — Forest + Cream Split</div>
+  <div class="hero hero-d">
+    <div class="cream-panel"></div>
+    <div class="texture-dots"></div>
+    <div class="hero-content">
+      <div class="eyebrow">אדריכלות של קשב</div>
+      <h1 class="title">מעצבת את <em>הכלי</em> —<br>מרחיבה את האופק.</h1>
+      <p class="sub">מרחבים שמעוררים קשב, רפלקציה וצמיחה.</p>
+      <a href="#" class="cta">שיטת "מלא את הכלי"</a>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
