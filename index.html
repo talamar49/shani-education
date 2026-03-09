@@ -259,6 +259,78 @@
       position: relative;
     }
 
+    /* ── HERO PHOTO FRAME ── */
+    .hero-photo-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .hero-photo-frame {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 460px;
+      box-shadow: 0 32px 64px rgba(100,50,20,0.22);
+    }
+
+    .hero-photo-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.85) sepia(0.1);
+    }
+
+    /* warm terracotta tint overlay */
+    .hero-photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(196,112,74,0.1) 0%, rgba(30,20,8,0.35) 100%);
+    }
+
+    /* floating pot badge on photo */
+    .hero-photo-pot {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      z-index: 3;
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px 16px 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+      text-align: center;
+      animation: floatPot 6s ease-in-out infinite;
+    }
+
+    .hero-photo-pot svg { width: 64px; height: 76px; }
+    .hero-photo-pot span {
+      display: block;
+      font-family: 'Assistant', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* tag on photo */
+    .hero-photo-tag {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 3;
+      background: rgba(253,248,242,0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-family: 'Assistant', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--clay);
+      border: 1px solid rgba(196,112,74,0.2);
+    }
+
     .pot-stage {
       position: relative;
       text-align: center;
@@ -276,6 +348,111 @@
       color: var(--text-muted);
       margin-top: 16px;
       font-style: italic;
+    }
+
+    /* ── ABOUT PHOTO ── */
+    .about-photo-frame {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 420px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.25);
+    }
+
+    .about-photo-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.8) sepia(0.08);
+    }
+
+    .about-photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(30,20,8,0.65) 0%, rgba(30,20,8,0.05) 55%);
+    }
+
+    .about-photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 2;
+      padding: 28px;
+    }
+
+    .about-photo-caption p {
+      font-family: 'Suez One', serif;
+      font-size: 18px;
+      color: #fff;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* ── GALLERY SECTION ── */
+    #gallery {
+      background: var(--cream-dark);
+      padding: 80px 60px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-rows: 260px 200px;
+      gap: 12px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item:first-child {
+      grid-row: 1 / 3;
+    }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease, filter 0.3s;
+      filter: saturate(0.85) sepia(0.08);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+      filter: saturate(1) sepia(0);
+    }
+
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(30,20,8,0.4) 0%, transparent 50%);
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover::after { opacity: 0.5; }
+
+    .gallery-caption {
+      position: absolute;
+      bottom: 14px; right: 16px;
+      z-index: 2;
+      font-family: 'Assistant', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-row: auto; }
+      #gallery { padding: 56px 20px; }
+      .hero-photo-frame { height: 320px; }
+      .hero-photo-pot { display: none; }
     }
 
     /* Small floating pots */
@@ -630,9 +807,9 @@
     .product-visual.forest-bg { background: var(--forest-light); }
     .product-visual.amber-bg { background: #faecd4; }
 
-    .product-visual svg { width: 80px; height: 96px; }
+    .product-visual svg { width: 80px; height: 96px; position: relative; z-index: 2; }
 
-    .product-badge {
+    .product-badge { z-index: 3; position: absolute;
       position: absolute;
       top: 14px;
       left: 14px;
@@ -1204,7 +1381,30 @@
 
     <!-- Visual — Main pot -->
     <div class="hero-visual reveal">
-      <div class="pot-stage">
+      <div class="hero-photo-wrap">
+
+        <!-- Main photo frame -->
+        <div class="hero-photo-frame">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&h=920&q=82&auto=format&fit=crop&crop=faces,top" alt="ילד יוצר ולומד במרחב חינוכי מעוצב" loading="eager">
+          <div class="hero-photo-tag">כיתת עתיד ✦</div>
+        </div>
+
+        <!-- Floating pot badge -->
+        <div class="hero-photo-pot">
+          <svg width="64" height="76" viewBox="0 0 64 76" fill="none">
+            <ellipse cx="32" cy="26" rx="16" ry="7" fill="#d5e8dd" stroke="#3d6b52" stroke-width="1.4"/>
+            <path d="M32 26 Q32 15 27 8 M32 26 Q29 14 36 7 M32 26 Q35 14 38 8" stroke="#3d6b52" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="32" cy="6" r="4" fill="#7bc47e"/>
+            <rect x="16" y="40" width="32" height="26" rx="4" fill="#c4704a"/>
+            <path d="M11 40 L53 40" stroke="#a3572f" stroke-width="1.8" stroke-linecap="round"/>
+            <ellipse cx="32" cy="40" rx="22" ry="7" fill="#d4a24a" fill-opacity="0.4"/>
+          </svg>
+          <span>כל ילד — כלי</span>
+        </div>
+
+      </div>
+
+      <div class="pot-stage" style="display:none">
 
         <!-- Small pot 1 (floating) -->
         <div class="float-pot float-pot-1">
@@ -1263,9 +1463,10 @@
           </svg>
           <span class="float-pot-label">הכלי ההפוך</span>
         </div>
-      </div>
-    </div>
-  </div>
+      </div><!-- /pot-stage hidden -->
+    </div><!-- /hero-photo-wrap -->
+    </div><!-- /hero-visual -->
+  </div><!-- /hero-inner -->
 </section>
 
 <!-- ══════════ MARQUEE STRIP ══════════ -->
@@ -1356,8 +1557,11 @@
       </div>
 
       <div class="reveal">
-        <div class="about-quote">
-          <p>כל ילד הוא כלי ייחודי, עם צורה משלו וקיבולת משלו. תפקידנו לזהות את הכלי, להרחיב אותו בעדינות, ולמלא אותו בתוכן שיזין את נשמתו.</p>
+        <div class="about-photo-frame">
+          <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=700&h=840&q=82&auto=format&fit=crop&crop=center" alt="מרחב למידה מעוצב וחמים" loading="lazy">
+          <div class="about-photo-caption">
+            <p>כל ילד הוא כלי ייחודי — תפקידנו לזהות אותו ולמלאו בשפע.</p>
+          </div>
         </div>
       </div>
 
@@ -1461,6 +1665,40 @@
   </div>
 </section>
 
+<!-- ══════════ GALLERY ══════════ -->
+<section id="gallery">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;">
+      <div>
+        <div class="sec-eyebrow clay">מהשטח</div>
+        <h2 class="section-title" style="font-size:clamp(26px,3vw,38px)!important">מרחבים שיצרנו יחד.</h2>
+      </div>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=920&q=80&auto=format&fit=crop&crop=center" alt="כיתת יצירה צבעונית ומעוצבת" loading="lazy">
+        <span class="gallery-caption">מרחב יצירה</span>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=500&h=520&q=80&auto=format&fit=crop&crop=top" alt="תלמידים עובדים בקבוצה" loading="lazy">
+        <span class="gallery-caption">למידה שיתופית</span>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=500&h=520&q=80&auto=format&fit=crop" alt="מורה ותלמידים בסביבה חמה" loading="lazy">
+        <span class="gallery-caption">חיבור ורפלקציה</span>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=500&h=400&q=80&auto=format&fit=crop" alt="ספרים ועיצוב קשב" loading="lazy">
+        <span class="gallery-caption">כלים ויזואליים</span>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&h=400&q=80&auto=format&fit=crop" alt="טבע וצמיחה" loading="lazy">
+        <span class="gallery-caption">צמיחה טבעית</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ SERVICES — FOREST BG ══════════ -->
 <section id="services">
   <div class="container">
@@ -1519,7 +1757,9 @@
     <div class="products-grid">
 
       <div class="product-card reveal">
-        <div class="product-visual clay-bg">
+        <div class="product-visual clay-bg" style="padding:0;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=400&h=400&q=80&auto=format&fit=crop" alt="ערכת כיתה" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.75) sepia(0.15);">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(196,112,74,0.35),rgba(30,20,8,0.4));"></div>
           <!-- Pot with papers/notes coming out -->
           <svg width="80" height="96" viewBox="0 0 80 96" fill="none">
             <ellipse cx="40" cy="32" rx="22" ry="9" fill="#d5e8dd" stroke="#3d6b52" stroke-width="1.5"/>
@@ -1542,7 +1782,9 @@
       </div>
 
       <div class="product-card reveal">
-        <div class="product-visual forest-bg">
+        <div class="product-visual forest-bg" style="padding:0;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1559628233-100c798642d4?w=400&h=400&q=80&auto=format&fit=crop" alt="פוסטרים ויזואליים" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.7) sepia(0.1);">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(61,107,82,0.4),rgba(30,20,8,0.35));"></div>
           <svg width="80" height="96" viewBox="0 0 80 96" fill="none">
             <!-- Poster/frame -->
             <rect x="20" y="10" width="40" height="52" rx="3" fill="#fff" stroke="#3d6b52" stroke-width="1.5"/>
@@ -1567,7 +1809,9 @@
       </div>
 
       <div class="product-card reveal">
-        <div class="product-visual amber-bg">
+        <div class="product-visual amber-bg" style="padding:0;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&q=80&auto=format&fit=crop&crop=top" alt="ילדים לומדים" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.75) sepia(0.12);">
+          <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(212,162,74,0.35),rgba(30,20,8,0.35));"></div>
           <svg width="80" height="96" viewBox="0 0 80 96" fill="none">
             <!-- 3 small pots of different sizes -->
             <rect x="10" y="54" width="18" height="14" rx="2" fill="#c4704a"/>
