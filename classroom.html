@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שני - ניהול כיתה ו׳</title>
+<style>
+:root {
+  --primary: #4361ee;
+  --primary-light: #e8ecff;
+  --primary-dark: #3a56d4;
+  --success: #2ec4b6;
+  --warning: #ff9f1c;
+  --danger: #e71d36;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  color: white;
+  padding: 20px 0;
+  z-index: 100;
+  overflow-y: auto;
+  transition: transform 0.3s;
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 10px;
+}
+
+.sidebar-header h2 { font-size: 1.3rem; margin-bottom: 4px; }
+.sidebar-header p { font-size: 0.8rem; opacity: 0.7; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.95rem;
+  border: none;
+  background: none;
+  color: white;
+  width: 100%;
+  text-align: right;
+  direction: rtl;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.1); }
+.nav-item.active { background: var(--primary); border-radius: 0; }
+.nav-item .icon { font-size: 1.2rem; width: 28px; text-align: center; }
+
+.nav-section {
+  padding: 10px 20px 5px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  opacity: 0.5;
+  letter-spacing: 1px;
+}
+
+/* Main content */
+.main {
+  margin-right: 240px;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* Mobile menu */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-right: 0; }
+  .mobile-toggle { display: block; }
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-header h3 { font-size: 1.1rem; }
+
+/* Grid */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+/* Page header */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 { font-size: 1.6rem; margin-bottom: 4px; }
+.page-header p { color: var(--text-light); font-size: 0.9rem; }
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* Subject cards */
+.subject-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border-right: 4px solid var(--primary);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.subject-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.subject-card .subject-icon { font-size: 2rem; margin-bottom: 8px; }
+.subject-card .subject-name { font-weight: 600; font-size: 1.05rem; margin-bottom: 4px; }
+.subject-card .subject-current { font-size: 0.85rem; color: var(--text-light); margin-bottom: 8px; }
+.subject-card .subject-progress-text { font-size: 0.8rem; color: var(--text-light); text-align: left; direction: ltr; }
+
+/* Stats */
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.stat-card .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+.stat-card .stat-label { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #27b0a3; }
+.btn-warning { background: var(--warning); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { background: var(--bg); }
+.btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+
+/* Form elements */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 500; }
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  direction: rtl;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67,97,238,0.15); }
+
+select.form-control { cursor: pointer; }
+textarea.form-control { resize: vertical; min-height: 80px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+th { background: var(--bg); font-weight: 600; position: sticky; top: 0; }
+tr:hover { background: #f9fafb; }
+
+/* Tags */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tag-completed { background: #d1fae5; color: #065f46; }
+.tag-in-progress { background: #dbeafe; color: #1e40af; }
+.tag-planned { background: #f3f4f6; color: #6b7280; }
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 500;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--card);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-light);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-close:hover { background: var(--bg); }
+
+.modal h2 { margin-bottom: 16px; font-size: 1.2rem; }
+
+/* Calendar */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-header {
+  padding: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.calendar-day {
+  min-height: 80px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calendar-day:hover { background: var(--primary-light); }
+.calendar-day.today { border-color: var(--primary); background: var(--primary-light); }
+.calendar-day.other-month { opacity: 0.3; }
+.calendar-day .day-number { font-weight: 600; margin-bottom: 4px; }
+
+.calendar-event {
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Weekly schedule */
+.weekly-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.weekly-header {
+  background: var(--primary);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.weekly-time {
+  background: var(--bg);
+  padding: 8px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weekly-cell {
+  background: var(--card);
+  padding: 6px;
+  min-height: 60px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.8rem;
+}
+
+.weekly-cell:hover { background: var(--primary-light); }
+
+.weekly-lesson {
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+/* Lesson plan */
+.lesson-plan-card {
+  border-right: 4px solid var(--primary);
+  padding: 16px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+
+.lesson-plan-card h4 { margin-bottom: 8px; }
+
+.lesson-plan-section {
+  margin-bottom: 10px;
+}
+
+.lesson-plan-section strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.lesson-plan-section p, .lesson-plan-section ul {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.lesson-plan-section ul { padding-right: 20px; }
+
+/* Checklist */
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.checklist-item:last-child { border-bottom: none; }
+
+.checklist-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.checklist-item.done label { text-decoration: line-through; color: var(--text-light); }
+
+/* Zoom info */
+.zoom-bar {
+  background: linear-gradient(135deg, #2d8cff 0%, #1a6dd1 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.zoom-bar .zoom-info { display: flex; align-items: center; gap: 10px; }
+.zoom-bar .zoom-icon { font-size: 1.5rem; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+/* Notes */
+.note-card {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.note-card .note-date { font-size: 0.75rem; color: var(--text-light); margin-bottom: 6px; }
+
+/* Search */
+.search-box {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  direction: rtl;
+}
+
+.search-box input:focus { outline: none; border-color: var(--primary); }
+
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: #1a1a2e;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Print styles */
+@media print {
+  .sidebar, .mobile-toggle, .btn, .tabs { display: none !important; }
+  .main { margin-right: 0 !important; }
+  .card { box-shadow: none; border: 1px solid #ddd; }
+}
+
+/* Utility */
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-center { display: flex; align-items: center; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.text-center { text-align: center; }
+.text-sm { font-size: 0.85rem; }
+.text-light { color: var(--text-light); }
+.hidden { display: none !important; }
+.fw-600 { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>📚 כיתה ו׳</h2>
+    <p>שני — תשפ״ו</p>
+  </div>
+  <button class="nav-item active" data-page="dashboard">
+    <span class="icon">🏠</span> ראשי
+  </button>
+  <button class="nav-item" data-page="schedule">
+    <span class="icon">📅</span> מערכת שעות
+  </button>
+  <button class="nav-item" data-page="calendar">
+    <span class="icon">🗓️</span> לוח שנה
+  </button>
+  <button class="nav-item" data-page="lessons">
+    <span class="icon">📝</span> מערכי שיעור
+  </button>
+  <div class="nav-section">מקצועות</div>
+  <button class="nav-item" data-page="subject" data-subject="history">
+    <span class="icon">🏛️</span> היסטוריה
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="language">
+    <span class="icon">✏️</span> שפה
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="geography">
+    <span class="icon">🌍</span> גיאוגרפיה
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="bible">
+    <span class="icon">📖</span> תנ״ך
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="math">
+    <span class="icon">🔢</span> מתמטיקה
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="science">
+    <span class="icon">🔬</span> מדעים
+  </button>
+  <button class="nav-item" data-page="subject" data-subject="civic">
+    <span class="icon">🏛️</span> חינוך אזרחי
+  </button>
+  <div class="nav-section">כלים</div>
+  <button class="nav-item" data-page="zoom">
+    <span class="icon">📹</span> שיעורי זום
+  </button>
+  <button class="nav-item" data-page="notes">
+    <span class="icon">📌</span> הערות
+  </button>
+</nav>
+
+<main class="main" id="mainContent">
+  <!-- Content injected by JS -->
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ============================================================
+// DATA STORE
+// ============================================================
+const STORAGE_KEY = 'shani-classroom-v1';
+
+const SUBJECT_COLORS = {
+  history: '#e74c3c',
+  language: '#3498db',
+  geography: '#27ae60',
+  bible: '#8e44ad',
+  math: '#e67e22',
+  science: '#1abc9c',
+  civic: '#34495e'
+};
+
+const SUBJECT_ICONS = {
+  history: '🏛️',
+  language: '✏️',
+  geography: '🌍',
+  bible: '📖',
+  math: '🔢',
+  science: '🔬',
+  civic: '🏛️'
+};
+
+const SUBJECT_NAMES = {
+  history: 'היסטוריה',
+  language: 'שפה',
+  geography: 'גיאוגרפיה',
+  bible: 'תנ״ך',
+  math: 'מתמטיקה',
+  science: 'מדעים',
+  civic: 'חינוך אזרחי'
+};
+
+const SUBJECT_BOOKS = {
+  history: 'מסע אל העבר',
+  language: '',
+  geography: 'חוקרים ארץ',
+  bible: 'ספר יהושע / שופטים / שמואל',
+  math: '',
+  science: '',
+  civic: ''
+};
+
+function getDefaultData() {
+  return {
+    subjects: {
+      history: {
+        name: 'היסטוריה',
+        book: 'מסע אל העבר',
+        units: [
+          { id: 'h1', title: 'ממלכת יהודה', status: 'completed', notes: '' },
+          { id: 'h2', title: 'ממלכת יהודה וישראל - סיום', status: 'in-progress', notes: '' },
+          { id: 'h3', title: 'גלות ושיבת ציון', status: 'planned', notes: '' },
+          { id: 'h4', title: 'ימי הבית השני', status: 'planned', notes: '' },
+          { id: 'h5', title: 'מרד החשמונאים', status: 'planned', notes: '' },
+          { id: 'h6', title: 'ממלכת החשמונאים', status: 'planned', notes: '' },
+          { id: 'h7', title: 'החורבן וגלות אדום', status: 'planned', notes: '' }
+        ]
+      },
+      language: {
+        name: 'שפה',
+        book: '',
+        units: [
+          { id: 'l1', title: 'פסח ואביב', status: 'in-progress', notes: '' },
+          { id: 'l2', title: 'יחידת קריאה - רומן גרפי', status: 'planned', notes: '' },
+          { id: 'l3', title: 'כתיבה יוצרת - סיפור', status: 'planned', notes: '' },
+          { id: 'l4', title: 'דקדוק - פועל בינוני', status: 'planned', notes: '' },
+          { id: 'l5', title: 'עצמאות ושואה - ספרות ושפה', status: 'planned', notes: '' },
+          { id: 'l6', title: 'סיום שנה - פרויקט כיתתי', status: 'planned', notes: '' }
+        ]
+      },
+      geography: {
+        name: 'גיאוגרפיה',
+        book: 'חוקרים ארץ',
+        units: [
+          { id: 'g0', title: 'מקורות המים', status: 'completed', notes: '' },
+          { id: 'g1', title: 'ניצול מים בישראל', status: 'in-progress', notes: '' },
+          { id: 'g2', title: 'תשתיות מים', status: 'planned', notes: '' },
+          { id: 'g3', title: 'מדבר ואקלים', status: 'planned', notes: '' },
+          { id: 'g4', title: 'ישראל בין מדינות - גבולות', status: 'planned', notes: '' },
+          { id: 'g5', title: 'סיכום חוקרים ארץ', status: 'planned', notes: '' }
+        ]
+      },
+      bible: {
+        name: 'תנ״ך',
+        book: 'יהושע / שופטים / שמואל',
+        units: [
+          { id: 'b0', title: 'יהושע פרקים א-ז', status: 'completed', notes: '' },
+          { id: 'b1', title: 'יהושע פרקים ח-יב (כיבוש הארץ)', status: 'in-progress', notes: '' },
+          { id: 'b2', title: 'שופטים - מבוא', status: 'planned', notes: '' },
+          { id: 'b3', title: 'שופטים - דבורה', status: 'planned', notes: '' },
+          { id: 'b4', title: 'שופטים - גדעון', status: 'planned', notes: '' },
+          { id: 'b5', title: 'שמואל א - שאול ודוד', status: 'planned', notes: '' }
+        ]
+      },
+      math: {
+        name: 'מתמטיקה',
+        book: '',
+        units: [
+          { id: 'm1', title: 'שברים - חיבור וחיסור', status: 'in-progress', notes: '' },
+          { id: 'm2', title: 'שברים - כפל', status: 'planned', notes: '' },
+          { id: 'm3', title: 'אחוזים', status: 'planned', notes: '' },
+          { id: 'm4', title: 'מדידה ושטח', status: 'planned', notes: '' },
+          { id: 'm5', title: 'נתונים וסטטיסטיקה', status: 'planned', notes: '' }
+        ]
+      },
+      science: {
+        name: 'מדעים',
+        book: '',
+        units: [
+          { id: 's1', title: 'מערכות בגוף האדם', status: 'in-progress', notes: '' },
+          { id: 's2', title: 'חשמל ואלקטרוניקה', status: 'planned', notes: '' },
+          { id: 's3', title: 'חומרים ותכונותיהם', status: 'planned', notes: '' },
+          { id: 's4', title: 'כדור הארץ וחלל', status: 'planned', notes: '' }
+        ]
+      },
+      civic: {
+        name: 'חינוך אזרחי',
+        book: '',
+        units: [
+          { id: 'c1', title: 'יום השואה', status: 'planned', notes: '' },
+          { id: 'c2', title: 'יום הזיכרון', status: 'planned', notes: '' },
+          { id: 'c3', title: 'יום העצמאות', status: 'planned', notes: '' },
+          { id: 'c4', title: 'ערכים ואזרחות', status: 'planned', notes: '' }
+        ]
+      }
+    },
+    weeklySchedule: getDefaultSchedule(),
+    lessonPlans: [],
+    notes: [],
+    zoomLinks: {
+      defaultLink: '',
+      defaultPassword: '',
+      subjectLinks: {}
+    },
+    calendarEvents: []
+  };
+}
+
+function getDefaultSchedule() {
+  // Sunday to Thursday (Israeli school week)
+  // 8 periods
+  return {
+    0: { // Sunday
+      1: { subject: 'math', topic: '' },
+      2: { subject: 'math', topic: '' },
+      3: { subject: 'language', topic: '' },
+      4: { subject: 'language', topic: '' },
+      5: { subject: 'history', topic: '' },
+      6: { subject: 'science', topic: '' },
+      7: { subject: '', topic: '' },
+      8: { subject: '', topic: '' }
+    },
+    1: { // Monday
+      1: { subject: 'bible', topic: '' },
+      2: { subject: 'bible', topic: '' },
+      3: { subject: 'math', topic: '' },
+      4: { subject: 'geography', topic: '' },
+      5: { subject: 'language', topic: '' },
+      6: { subject: 'language', topic: '' },
+      7: { subject: '', topic: '' },
+      8: { subject: '', topic: '' }
+    },
+    2: { // Tuesday
+      1: { subject: 'language', topic: '' },
+      2: { subject: 'math', topic: '' },
+      3: { subject: 'science', topic: '' },
+      4: { subject: 'science', topic: '' },
+      5: { subject: 'civic', topic: '' },
+      6: { subject: 'history', topic: '' },
+      7: { subject: '', topic: '' },
+      8: { subject: '', topic: '' }
+    },
+    3: { // Wednesday
+      1: { subject: 'math', topic: '' },
+      2: { subject: 'math', topic: '' },
+      3: { subject: 'bible', topic: '' },
+      4: { subject: 'geography', topic: '' },
+      5: { subject: 'language', topic: '' },
+      6: { subject: 'language', topic: '' },
+      7: { subject: '', topic: '' },
+      8: { subject: '', topic: '' }
+    },
+    4: { // Thursday
+      1: { subject: 'language', topic: '' },
+      2: { subject: 'history', topic: '' },
+      3: { subject: 'math', topic: '' },
+      4: { subject: 'bible', topic: '' },
+      5: { subject: 'geography', topic: '' },
+      6: { subject: 'civic', topic: '' },
+      7: { subject: '', topic: '' },
+      8: { subject: '', topic: '' }
+    }
+  };
+}
+
+const PERIOD_TIMES = [
+  '08:00', '08:45', '09:45', '10:30',
+  '11:15', '12:00', '12:45', '13:30'
+];
+
+const DAY_NAMES = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'];
+
+let appData;
+let currentPage = 'dashboard';
+let currentSubject = null;
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      appData = JSON.parse(saved);
+      // Merge missing fields from default
+      const def = getDefaultData();
+      if (!appData.calendarEvents) appData.calendarEvents = [];
+      if (!appData.zoomLinks) appData.zoomLinks = def.zoomLinks;
+      if (!appData.lessonPlans) appData.lessonPlans = [];
+      if (!appData.notes) appData.notes = [];
+      // Ensure all subjects exist
+      for (const key of Object.keys(def.subjects)) {
+        if (!appData.subjects[key]) appData.subjects[key] = def.subjects[key];
+      }
+    } else {
+      appData = getDefaultData();
+    }
+  } catch {
+    appData = getDefaultData();
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const page = btn.dataset.page;
+    const subject = btn.dataset.subject || null;
+    navigateTo(page, subject);
+    // Close mobile menu
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+
+function navigateTo(page, subject) {
+  currentPage = page;
+  currentSubject = subject;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const selector = subject
+    ? `.nav-item[data-page="${page}"][data-subject="${subject}"]`
+    : `.nav-item[data-page="${page}"]:not([data-subject])`;
+  const active = document.querySelector(selector);
+  if (active) active.classList.add('active');
+  renderPage();
+}
+
+function renderPage() {
+  const main = document.getElementById('mainContent');
+  switch (currentPage) {
+    case 'dashboard': main.innerHTML = renderDashboard(); break;
+    case 'schedule': main.innerHTML = renderSchedule(); break;
+    case 'calendar': main.innerHTML = renderCalendar(); break;
+    case 'lessons': main.innerHTML = renderLessons(); break;
+    case 'subject': main.innerHTML = renderSubject(currentSubject); break;
+    case 'zoom': main.innerHTML = renderZoom(); break;
+    case 'notes': main.innerHTML = renderNotes(); break;
+    default: main.innerHTML = renderDashboard();
+  }
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getSubjectProgress(key) {
+  const units = appData.subjects[key].units;
+  const completed = units.filter(u => u.status === 'completed').length;
+  return Math.round((completed / units.length) * 100);
+}
+
+function getCurrentUnit(key) {
+  const units = appData.subjects[key].units;
+  const inProgress = units.find(u => u.status === 'in-progress');
+  if (inProgress) return inProgress.title;
+  const planned = units.find(u => u.status === 'planned');
+  return planned ? planned.title : 'הושלם';
+}
+
+function getStatusTag(status) {
+  const labels = { completed: 'הושלם', 'in-progress': 'בתהליך', planned: 'מתוכנן' };
+  return `<span class="tag tag-${status}">${labels[status]}</span>`;
+}
+
+function showToast(msg) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function openModal(html) {
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('he-IL');
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const totalUnits = Object.values(appData.subjects).reduce((s, subj) => s + subj.units.length, 0);
+  const completedUnits = Object.values(appData.subjects).reduce((s, subj) =>
+    s + subj.units.filter(u => u.status === 'completed').length, 0);
+  const inProgressUnits = Object.values(appData.subjects).reduce((s, subj) =>
+    s + subj.units.filter(u => u.status === 'in-progress').length, 0);
+  const totalProgress = Math.round((completedUnits / totalUnits) * 100);
+
+  // Count lessons this week
+  let lessonsThisWeek = 0;
+  for (const day of Object.values(appData.weeklySchedule)) {
+    for (const period of Object.values(day)) {
+      if (period.subject) lessonsThisWeek++;
+    }
+  }
+
+  let subjectCards = '';
+  for (const [key, subj] of Object.entries(appData.subjects)) {
+    const progress = getSubjectProgress(key);
+    const current = getCurrentUnit(key);
+    const color = SUBJECT_COLORS[key];
+    subjectCards += `
+      <div class="subject-card" style="border-right-color: ${color}" onclick="navigateTo('subject', '${key}')">
+        <div class="subject-icon">${SUBJECT_ICONS[key]}</div>
+        <div class="subject-name">${subj.name}</div>
+        <div class="subject-current">📍 ${current}</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${progress}%; background: ${color}"></div>
+        </div>
+        <div class="subject-progress-text">${progress}% הושלם</div>
+      </div>`;
+  }
+
+  return `
+    <div class="page-header">
+      <h1>שלום שני! 👋</h1>
+      <p>ברוכה הבאה ללוח הבקרה של כיתה ו׳ — תשפ״ו</p>
+    </div>
+
+    <div class="grid grid-4 mb-16">
+      <div class="stat-card">
+        <div class="stat-value">${totalProgress}%</div>
+        <div class="stat-label">התקדמות כללית</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${completedUnits}</div>
+        <div class="stat-label">יחידות הושלמו</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${inProgressUnits}</div>
+        <div class="stat-label">בתהליך</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${lessonsThisWeek}</div>
+        <div class="stat-label">שיעורים בשבוע</div>
+      </div>
+    </div>
+
+    <div class="card mb-16">
+      <div class="card-header">
+        <h3>התקדמות כללית</h3>
+      </div>
+      <div class="progress-bar" style="height: 16px;">
+        <div class="progress-fill" style="width: ${totalProgress}%; background: linear-gradient(90deg, var(--primary), var(--success))"></div>
+      </div>
+      <div class="text-sm text-light mt-8">${completedUnits} מתוך ${totalUnits} יחידות הושלמו</div>
+    </div>
+
+    <h3 class="mb-8">מקצועות</h3>
+    <div class="grid grid-3">
+      ${subjectCards}
+    </div>
+  `;
+}
+
+// ============================================================
+// WEEKLY SCHEDULE
+// ============================================================
+function renderSchedule() {
+  let headerRow = '<div class="weekly-header">שעה</div>';
+  DAY_NAMES.forEach((day, i) => {
+    headerRow += `<div class="weekly-header">יום ${day}</div>`;
+  });
+
+  let rows = '';
+  for (let period = 1; period <= 8; period++) {
+    rows += `<div class="weekly-time">${PERIOD_TIMES[period - 1]}<br>שעה ${period}</div>`;
+    for (let day = 0; day < 5; day++) {
+      const cell = appData.weeklySchedule[day]?.[period] || { subject: '', topic: '' };
+      const subj = cell.subject;
+      let content = '';
+      if (subj) {
+        const color = SUBJECT_COLORS[subj] || '#999';
+        content = `<div class="weekly-lesson" style="background: ${color}20; border-right: 3px solid ${color}; color: ${color}">
+          <strong>${SUBJECT_NAMES[subj] || subj}</strong>
+          ${cell.topic ? `<br><span style="font-size:0.7rem; color: var(--text-light)">${cell.topic}</span>` : ''}
+        </div>`;
+      }
+      rows += `<div class="weekly-cell" onclick="editScheduleCell(${day}, ${period})">${content}</div>`;
+    }
+  }
+
+  return `
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h1>📅 מערכת שעות שבועית</h1>
+          <p>לחצי על תא לעריכה</p>
+        </div>
+        <button class="btn btn-outline" onclick="resetSchedule()">איפוס מערכת</button>
+      </div>
+    </div>
+    <div class="card" style="overflow-x: auto;">
+      <div class="weekly-grid">
+        ${headerRow}
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
+window.editScheduleCell = function(day, period) {
+  const cell = appData.weeklySchedule[day]?.[period] || { subject: '', topic: '' };
+  let options = '<option value="">— ריק —</option>';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    options += `<option value="${key}" ${cell.subject === key ? 'selected' : ''}>${name}</option>`;
+  }
+  openModal(`
+    <h2>עריכת שיעור — יום ${DAY_NAMES[day]}, שעה ${period}</h2>
+    <div class="form-group">
+      <label>מקצוע</label>
+      <select class="form-control" id="schedSubject">${options}</select>
+    </div>
+    <div class="form-group">
+      <label>נושא (אופציונלי)</label>
+      <input class="form-control" id="schedTopic" value="${cell.topic || ''}">
+    </div>
+    <button class="btn btn-primary" onclick="saveScheduleCell(${day}, ${period})">שמור</button>
+  `);
+};
+
+window.saveScheduleCell = function(day, period) {
+  if (!appData.weeklySchedule[day]) appData.weeklySchedule[day] = {};
+  appData.weeklySchedule[day][period] = {
+    subject: document.getElementById('schedSubject').value,
+    topic: document.getElementById('schedTopic').value
+  };
+  saveData();
+  closeModal();
+  renderPage();
+  showToast('מערכת השעות עודכנה');
+};
+
+window.resetSchedule = function() {
+  if (confirm('האם לאפס את מערכת השעות לברירת המחדל?')) {
+    appData.weeklySchedule = getDefaultSchedule();
+    saveData();
+    renderPage();
+    showToast('מערכת השעות אופסה');
+  }
+};
+
+// ============================================================
+// CALENDAR
+// ============================================================
+let calendarDate = new Date();
+
+function renderCalendar() {
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+  const monthName = calendarDate.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  // In Israel, week starts on Sunday (0)
+  const startDow = firstDay.getDay();
+  const daysInMonth = lastDay.getDate();
+
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  let headers = '';
+  ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'].forEach(d => {
+    headers += `<div class="calendar-header">${d}</div>`;
+  });
+
+  let days = '';
+  // Previous month days
+  const prevMonth = new Date(year, month, 0);
+  for (let i = startDow - 1; i >= 0; i--) {
+    days += `<div class="calendar-day other-month"><div class="day-number">${prevMonth.getDate() - i}</div></div>`;
+  }
+
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const isToday = dateStr === todayStr ? 'today' : '';
+    const events = (appData.calendarEvents || []).filter(e => e.date === dateStr);
+    let eventsHtml = '';
+    events.forEach(ev => {
+      const color = ev.subject ? SUBJECT_COLORS[ev.subject] || '#999' : '#999';
+      eventsHtml += `<div class="calendar-event" style="background: ${color}20; color: ${color}">${ev.title}</div>`;
+    });
+    days += `<div class="calendar-day ${isToday}" onclick="openCalendarDay('${dateStr}')">
+      <div class="day-number">${d}</div>
+      ${eventsHtml}
+    </div>`;
+  }
+
+  // Next month days
+  const totalCells = startDow + daysInMonth;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for (let i = 1; i <= remaining; i++) {
+    days += `<div class="calendar-day other-month"><div class="day-number">${i}</div></div>`;
+  }
+
+  return `
+    <div class="page-header">
+      <h1>🗓️ לוח שנה</h1>
+      <p>ניהול אירועים ומועדים</p>
+    </div>
+    <div class="card">
+      <div class="flex-between mb-16">
+        <div class="flex gap-8">
+          <button class="btn btn-outline" onclick="changeMonth(-1)">→</button>
+          <h3>${monthName}</h3>
+          <button class="btn btn-outline" onclick="changeMonth(1)">←</button>
+        </div>
+        <button class="btn btn-primary" onclick="addCalendarEvent()">+ אירוע חדש</button>
+      </div>
+      <div class="calendar-grid">
+        ${headers}
+        ${days}
+      </div>
+    </div>
+  `;
+}
+
+window.changeMonth = function(dir) {
+  calendarDate.setMonth(calendarDate.getMonth() + dir);
+  renderPage();
+};
+
+window.openCalendarDay = function(dateStr) {
+  const events = (appData.calendarEvents || []).filter(e => e.date === dateStr);
+  const d = new Date(dateStr);
+  const dayTitle = d.toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  let evList = '';
+  if (events.length === 0) {
+    evList = '<p class="text-light">אין אירועים ביום זה</p>';
+  } else {
+    events.forEach(ev => {
+      evList += `<div class="flex-between" style="padding: 8px 0; border-bottom: 1px solid var(--border)">
+        <div>
+          <strong>${ev.title}</strong>
+          ${ev.subject ? `<br><span class="text-sm text-light">${SUBJECT_NAMES[ev.subject] || ''}</span>` : ''}
+          ${ev.description ? `<br><span class="text-sm">${ev.description}</span>` : ''}
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="deleteCalendarEvent('${ev.id}')">מחק</button>
+      </div>`;
+    });
+  }
+
+  openModal(`
+    <h2>${dayTitle}</h2>
+    ${evList}
+    <div class="mt-16">
+      <button class="btn btn-primary" onclick="closeModal(); addCalendarEvent('${dateStr}')">+ הוסף אירוע</button>
+    </div>
+  `);
+};
+
+window.addCalendarEvent = function(defaultDate) {
+  let subjectOptions = '<option value="">— כללי —</option>';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    subjectOptions += `<option value="${key}">${name}</option>`;
+  }
+  openModal(`
+    <h2>אירוע חדש</h2>
+    <div class="form-group">
+      <label>תאריך</label>
+      <input type="date" class="form-control" id="evDate" value="${defaultDate || new Date().toISOString().split('T')[0]}">
+    </div>
+    <div class="form-group">
+      <label>כותרת</label>
+      <input class="form-control" id="evTitle" placeholder="שם האירוע">
+    </div>
+    <div class="form-group">
+      <label>מקצוע (אופציונלי)</label>
+      <select class="form-control" id="evSubject">${subjectOptions}</select>
+    </div>
+    <div class="form-group">
+      <label>תיאור</label>
+      <textarea class="form-control" id="evDesc" rows="3"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveCalendarEvent()">שמור</button>
+  `);
+};
+
+window.saveCalendarEvent = function() {
+  const title = document.getElementById('evTitle').value.trim();
+  if (!title) { showToast('נא להזין כותרת'); return; }
+  appData.calendarEvents.push({
+    id: genId(),
+    date: document.getElementById('evDate').value,
+    title,
+    subject: document.getElementById('evSubject').value,
+    description: document.getElementById('evDesc').value
+  });
+  saveData();
+  closeModal();
+  renderPage();
+  showToast('אירוע נוסף בהצלחה');
+};
+
+window.deleteCalendarEvent = function(id) {
+  appData.calendarEvents = appData.calendarEvents.filter(e => e.id !== id);
+  saveData();
+  closeModal();
+  renderPage();
+  showToast('אירוע נמחק');
+};
+
+// ============================================================
+// LESSON PLANS
+// ============================================================
+function renderLessons() {
+  let subjectOptions = '<option value="">כל המקצועות</option>';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    subjectOptions += `<option value="${key}">${name}</option>`;
+  }
+
+  const plans = appData.lessonPlans || [];
+  let plansList = '';
+
+  if (plans.length === 0) {
+    plansList = '<p class="text-light text-center" style="padding: 40px 0;">אין מערכי שיעור עדיין. לחצי על ״+ מערך שיעור חדש״ כדי להתחיל.</p>';
+  } else {
+    const sorted = [...plans].sort((a, b) => new Date(b.date) - new Date(a.date));
+    sorted.forEach(plan => {
+      const color = SUBJECT_COLORS[plan.subject] || '#999';
+      plansList += `
+        <div class="lesson-plan-card" style="border-right-color: ${color}" onclick="viewLessonPlan('${plan.id}')">
+          <div class="flex-between">
+            <h4>${SUBJECT_ICONS[plan.subject] || '📝'} ${plan.title}</h4>
+            <span class="text-sm text-light">${formatDate(plan.date)}</span>
+          </div>
+          <div class="text-sm text-light mt-8">
+            ${SUBJECT_NAMES[plan.subject] || ''} ${plan.unit ? '• ' + plan.unit : ''}
+          </div>
+          ${plan.summary ? `<p class="text-sm mt-8">${plan.summary.substring(0, 100)}...</p>` : ''}
+        </div>`;
+    });
+  }
+
+  return `
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h1>📝 מערכי שיעור</h1>
+          <p>תכנון וניהול שיעורים</p>
+        </div>
+        <button class="btn btn-primary" onclick="createLessonPlan()">+ מערך שיעור חדש</button>
+      </div>
+    </div>
+    <div class="card">
+      ${plansList}
+    </div>
+  `;
+}
+
+window.createLessonPlan = function(defaultSubject) {
+  let subjectOptions = '<option value="">בחרי מקצוע</option>';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    subjectOptions += `<option value="${key}" ${defaultSubject === key ? 'selected' : ''}>${name}</option>`;
+  }
+
+  openModal(`
+    <h2>מערך שיעור חדש</h2>
+    <div class="form-group">
+      <label>מקצוע</label>
+      <select class="form-control" id="lpSubject" onchange="updateUnitOptions()">${subjectOptions}</select>
+    </div>
+    <div class="form-group">
+      <label>יחידה</label>
+      <select class="form-control" id="lpUnit"><option value="">בחרי יחידה</option></select>
+    </div>
+    <div class="form-group">
+      <label>תאריך</label>
+      <input type="date" class="form-control" id="lpDate" value="${new Date().toISOString().split('T')[0]}">
+    </div>
+    <div class="form-group">
+      <label>כותרת השיעור</label>
+      <input class="form-control" id="lpTitle" placeholder="נושא השיעור">
+    </div>
+    <div class="form-group">
+      <label>מטרות השיעור</label>
+      <textarea class="form-control" id="lpGoals" rows="3" placeholder="מה התלמידים ילמדו?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>מהלך השיעור</label>
+      <textarea class="form-control" id="lpFlow" rows="5" placeholder="פתיחה, גוף השיעור, סיכום..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>חומרים ועזרים</label>
+      <textarea class="form-control" id="lpMaterials" rows="2" placeholder="ספר לימוד, דפי עבודה, מצגת..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>משימת בית</label>
+      <textarea class="form-control" id="lpHomework" rows="2" placeholder="שיעורי בית / משימה"></textarea>
+    </div>
+    <div class="form-group">
+      <label>הערות</label>
+      <textarea class="form-control" id="lpNotes" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="lpZoom"> שיעור בזום
+      </label>
+    </div>
+    <button class="btn btn-primary" onclick="saveLessonPlan()">שמור מערך שיעור</button>
+  `);
+
+  if (defaultSubject) updateUnitOptions();
+};
+
+window.updateUnitOptions = function() {
+  const subj = document.getElementById('lpSubject').value;
+  const select = document.getElementById('lpUnit');
+  select.innerHTML = '<option value="">בחרי יחידה</option>';
+  if (subj && appData.subjects[subj]) {
+    appData.subjects[subj].units.forEach(u => {
+      select.innerHTML += `<option value="${u.title}">${u.title}</option>`;
+    });
+  }
+};
+
+window.saveLessonPlan = function() {
+  const title = document.getElementById('lpTitle').value.trim();
+  const subject = document.getElementById('lpSubject').value;
+  if (!title || !subject) { showToast('נא למלא מקצוע וכותרת'); return; }
+
+  appData.lessonPlans.push({
+    id: genId(),
+    subject,
+    unit: document.getElementById('lpUnit').value,
+    date: document.getElementById('lpDate').value,
+    title,
+    goals: document.getElementById('lpGoals').value,
+    flow: document.getElementById('lpFlow').value,
+    materials: document.getElementById('lpMaterials').value,
+    homework: document.getElementById('lpHomework').value,
+    notes: document.getElementById('lpNotes').value,
+    isZoom: document.getElementById('lpZoom').checked,
+    summary: document.getElementById('lpGoals').value
+  });
+  saveData();
+  closeModal();
+  renderPage();
+  showToast('מערך השיעור נשמר');
+};
+
+window.viewLessonPlan = function(id) {
+  const plan = appData.lessonPlans.find(p => p.id === id);
+  if (!plan) return;
+  const color = SUBJECT_COLORS[plan.subject] || '#999';
+
+  openModal(`
+    <div class="flex-between mb-16">
+      <h2>${SUBJECT_ICONS[plan.subject] || ''} ${plan.title}</h2>
+      <div class="flex gap-8">
+        <button class="btn btn-sm btn-outline" onclick="printLessonPlan('${id}')">🖨️ הדפס</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteLessonPlan('${id}')">🗑️ מחק</button>
+      </div>
+    </div>
+    <div class="text-sm text-light mb-16">
+      ${SUBJECT_NAMES[plan.subject]} • ${plan.unit || ''} • ${formatDate(plan.date)}
+      ${plan.isZoom ? ' • 📹 שיעור בזום' : ''}
+    </div>
+    ${plan.goals ? `<div class="lesson-plan-section"><strong>🎯 מטרות השיעור</strong><p>${plan.goals.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.flow ? `<div class="lesson-plan-section"><strong>📋 מהלך השיעור</strong><p>${plan.flow.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.materials ? `<div class="lesson-plan-section"><strong>📦 חומרים ועזרים</strong><p>${plan.materials.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.homework ? `<div class="lesson-plan-section"><strong>📚 משימת בית</strong><p>${plan.homework.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.notes ? `<div class="lesson-plan-section"><strong>📌 הערות</strong><p>${plan.notes.replace(/\n/g, '<br>')}</p></div>` : ''}
+  `);
+};
+
+window.deleteLessonPlan = function(id) {
+  if (confirm('למחוק את מערך השיעור?')) {
+    appData.lessonPlans = appData.lessonPlans.filter(p => p.id !== id);
+    saveData();
+    closeModal();
+    renderPage();
+    showToast('מערך השיעור נמחק');
+  }
+};
+
+window.printLessonPlan = function(id) {
+  const plan = appData.lessonPlans.find(p => p.id === id);
+  if (!plan) return;
+  const w = window.open('', '_blank');
+  w.document.write(`<html dir="rtl"><head><title>${plan.title}</title>
+    <style>body{font-family:Arial,sans-serif;padding:40px;direction:rtl}h1{font-size:1.4rem}
+    .section{margin:16px 0}.section strong{display:block;margin-bottom:4px;color:#666}
+    p{line-height:1.8}</style></head><body>
+    <h1>${plan.title}</h1>
+    <p style="color:#666">${SUBJECT_NAMES[plan.subject]} • ${plan.unit || ''} • ${formatDate(plan.date)}</p>
+    <hr>
+    ${plan.goals ? `<div class="section"><strong>מטרות:</strong><p>${plan.goals.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.flow ? `<div class="section"><strong>מהלך השיעור:</strong><p>${plan.flow.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.materials ? `<div class="section"><strong>חומרים:</strong><p>${plan.materials.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.homework ? `<div class="section"><strong>משימת בית:</strong><p>${plan.homework.replace(/\n/g, '<br>')}</p></div>` : ''}
+    ${plan.notes ? `<div class="section"><strong>הערות:</strong><p>${plan.notes.replace(/\n/g, '<br>')}</p></div>` : ''}
+    </body></html>`);
+  w.document.close();
+  w.print();
+};
+
+// ============================================================
+// SUBJECT PAGE
+// ============================================================
+function renderSubject(key) {
+  const subj = appData.subjects[key];
+  if (!subj) return '<p>מקצוע לא נמצא</p>';
+
+  const progress = getSubjectProgress(key);
+  const color = SUBJECT_COLORS[key];
+  const completed = subj.units.filter(u => u.status === 'completed').length;
+
+  let unitsTable = '';
+  subj.units.forEach((unit, index) => {
+    unitsTable += `
+      <tr>
+        <td>${index + 1}</td>
+        <td><strong>${unit.title}</strong></td>
+        <td>${getStatusTag(unit.status)}</td>
+        <td>
+          <div class="flex gap-8">
+            <select class="form-control" style="width: auto; padding: 4px 8px; font-size: 0.8rem;"
+              onchange="changeUnitStatus('${key}', ${index}, this.value)">
+              <option value="planned" ${unit.status === 'planned' ? 'selected' : ''}>מתוכנן</option>
+              <option value="in-progress" ${unit.status === 'in-progress' ? 'selected' : ''}>בתהליך</option>
+              <option value="completed" ${unit.status === 'completed' ? 'selected' : ''}>הושלם</option>
+            </select>
+            <button class="btn btn-sm btn-outline" onclick="editUnitNotes('${key}', ${index})">📝</button>
+          </div>
+        </td>
+      </tr>`;
+  });
+
+  // Lesson plans for this subject
+  const subjectPlans = (appData.lessonPlans || []).filter(p => p.subject === key);
+  let plansHtml = '';
+  if (subjectPlans.length > 0) {
+    plansHtml = '<h3 class="mt-16 mb-8">מערכי שיעור</h3>';
+    subjectPlans.forEach(plan => {
+      plansHtml += `<div class="lesson-plan-card" style="border-right-color: ${color}; cursor: pointer;" onclick="viewLessonPlan('${plan.id}')">
+        <div class="flex-between">
+          <strong>${plan.title}</strong>
+          <span class="text-sm text-light">${formatDate(plan.date)}</span>
+        </div>
+        <div class="text-sm text-light">${plan.unit || ''}</div>
+      </div>`;
+    });
+  }
+
+  return `
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h1>${SUBJECT_ICONS[key]} ${subj.name}</h1>
+          <p>${subj.book ? 'ספר: ' + subj.book : ''}</p>
+        </div>
+        <button class="btn btn-primary" onclick="createLessonPlan('${key}')">+ מערך שיעור</button>
+      </div>
+    </div>
+
+    <div class="grid grid-2 mb-16">
+      <div class="card">
+        <h3 class="mb-8">התקדמות</h3>
+        <div class="progress-bar" style="height: 14px;">
+          <div class="progress-fill" style="width: ${progress}%; background: ${color}"></div>
+        </div>
+        <div class="flex-between mt-8">
+          <span class="text-sm text-light">${completed} מתוך ${subj.units.length} יחידות</span>
+          <span class="text-sm fw-600" style="color: ${color}">${progress}%</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="mb-8">נושא נוכחי</h3>
+        <p class="fw-600" style="font-size: 1.1rem;">📍 ${getCurrentUnit(key)}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="mb-8">יחידות לימוד</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>יחידה</th>
+              <th>סטטוס</th>
+              <th>פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${unitsTable}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    ${plansHtml}
+  `;
+}
+
+window.changeUnitStatus = function(subjectKey, index, newStatus) {
+  appData.subjects[subjectKey].units[index].status = newStatus;
+  saveData();
+  renderPage();
+  showToast('הסטטוס עודכן');
+};
+
+window.editUnitNotes = function(subjectKey, index) {
+  const unit = appData.subjects[subjectKey].units[index];
+  openModal(`
+    <h2>הערות — ${unit.title}</h2>
+    <div class="form-group">
+      <textarea class="form-control" id="unitNotes" rows="6" placeholder="הוסיפי הערות על היחידה...">${unit.notes || ''}</textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveUnitNotes('${subjectKey}', ${index})">שמור</button>
+  `);
+};
+
+window.saveUnitNotes = function(subjectKey, index) {
+  appData.subjects[subjectKey].units[index].notes = document.getElementById('unitNotes').value;
+  saveData();
+  closeModal();
+  showToast('ההערות נשמרו');
+};
+
+// ============================================================
+// ZOOM
+// ============================================================
+function renderZoom() {
+  const zoom = appData.zoomLinks || {};
+
+  let subjectLinksHtml = '';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    const link = zoom.subjectLinks?.[key] || '';
+    subjectLinksHtml += `
+      <div class="flex gap-8 mb-8" style="align-items: center;">
+        <span style="min-width: 100px;">${SUBJECT_ICONS[key]} ${name}</span>
+        <input class="form-control" id="zoom-${key}" value="${link}" placeholder="קישור זום" style="flex: 1;">
+      </div>`;
+  }
+
+  // Upcoming zoom lessons
+  const zoomPlans = (appData.lessonPlans || []).filter(p => p.isZoom);
+  let upcomingHtml = '';
+  if (zoomPlans.length > 0) {
+    upcomingHtml = '<h3 class="mt-16 mb-8">שיעורי זום מתוכננים</h3>';
+    zoomPlans.forEach(plan => {
+      upcomingHtml += `<div class="zoom-bar">
+        <div class="zoom-info">
+          <span class="zoom-icon">📹</span>
+          <div>
+            <strong>${plan.title}</strong><br>
+            <span style="font-size: 0.85rem;">${SUBJECT_NAMES[plan.subject]} • ${formatDate(plan.date)}</span>
+          </div>
+        </div>
+        ${zoom.subjectLinks?.[plan.subject] || zoom.defaultLink
+          ? `<a href="${zoom.subjectLinks?.[plan.subject] || zoom.defaultLink}" target="_blank" class="btn" style="background:white;color:#2d8cff">פתח זום</a>`
+          : ''}
+      </div>`;
+    });
+  }
+
+  return `
+    <div class="page-header">
+      <h1>📹 שיעורי זום</h1>
+      <p>ניהול קישורים ושיעורים מרחוק</p>
+    </div>
+
+    <div class="card mb-16">
+      <h3 class="mb-16">קישור ברירת מחדל</h3>
+      <div class="form-group">
+        <label>קישור זום כללי</label>
+        <input class="form-control" id="zoomDefault" value="${zoom.defaultLink || ''}" placeholder="https://zoom.us/j/...">
+      </div>
+      <div class="form-group">
+        <label>סיסמה</label>
+        <input class="form-control" id="zoomPassword" value="${zoom.defaultPassword || ''}" placeholder="סיסמת הזום">
+      </div>
+    </div>
+
+    <div class="card mb-16">
+      <h3 class="mb-16">קישורים לפי מקצוע (אופציונלי)</h3>
+      ${subjectLinksHtml}
+    </div>
+
+    <button class="btn btn-primary" onclick="saveZoomLinks()">💾 שמור קישורים</button>
+
+    ${upcomingHtml}
+  `;
+}
+
+window.saveZoomLinks = function() {
+  appData.zoomLinks.defaultLink = document.getElementById('zoomDefault').value;
+  appData.zoomLinks.defaultPassword = document.getElementById('zoomPassword').value;
+  if (!appData.zoomLinks.subjectLinks) appData.zoomLinks.subjectLinks = {};
+  for (const key of Object.keys(SUBJECT_NAMES)) {
+    const el = document.getElementById('zoom-' + key);
+    if (el) appData.zoomLinks.subjectLinks[key] = el.value;
+  }
+  saveData();
+  showToast('קישורי הזום נשמרו');
+};
+
+// ============================================================
+// NOTES
+// ============================================================
+function renderNotes() {
+  const notes = appData.notes || [];
+  let notesList = '';
+
+  if (notes.length === 0) {
+    notesList = '<p class="text-light text-center" style="padding: 40px 0;">אין הערות עדיין</p>';
+  } else {
+    [...notes].reverse().forEach(note => {
+      notesList += `
+        <div class="note-card">
+          <div class="flex-between">
+            <div class="note-date">${formatDate(note.date)}${note.subject ? ' • ' + SUBJECT_NAMES[note.subject] : ''}</div>
+            <button class="btn btn-sm btn-danger" onclick="deleteNote('${note.id}')">×</button>
+          </div>
+          <p>${note.text.replace(/\n/g, '<br>')}</p>
+        </div>`;
+    });
+  }
+
+  return `
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h1>📌 הערות ותזכורות</h1>
+          <p>רישום הערות מהירות</p>
+        </div>
+        <button class="btn btn-primary" onclick="addNote()">+ הערה חדשה</button>
+      </div>
+    </div>
+    <div class="card">
+      ${notesList}
+    </div>
+  `;
+}
+
+window.addNote = function() {
+  let subjectOptions = '<option value="">כללי</option>';
+  for (const [key, name] of Object.entries(SUBJECT_NAMES)) {
+    subjectOptions += `<option value="${key}">${name}</option>`;
+  }
+  openModal(`
+    <h2>הערה חדשה</h2>
+    <div class="form-group">
+      <label>מקצוע (אופציונלי)</label>
+      <select class="form-control" id="noteSubject">${subjectOptions}</select>
+    </div>
+    <div class="form-group">
+      <label>הערה</label>
+      <textarea class="form-control" id="noteText" rows="5" placeholder="כתבי כאן..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveNote()">שמור</button>
+  `);
+};
+
+window.saveNote = function() {
+  const text = document.getElementById('noteText').value.trim();
+  if (!text) { showToast('נא לכתוב הערה'); return; }
+  appData.notes.push({
+    id: genId(),
+    date: new Date().toISOString().split('T')[0],
+    subject: document.getElementById('noteSubject').value,
+    text
+  });
+  saveData();
+  closeModal();
+  renderPage();
+  showToast('ההערה נשמרה');
+};
+
+window.deleteNote = function(id) {
+  appData.notes = appData.notes.filter(n => n.id !== id);
+  saveData();
+  renderPage();
+  showToast('ההערה נמחקה');
+};
+
+// ============================================================
+// INIT
+// ============================================================
+loadData();
+renderPage();
+
+// Save on unload
+window.addEventListener('beforeunload', saveData);
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
